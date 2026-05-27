@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: macroecon-hub-api
+    runtime: python
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRED_API_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false
+      - key: BLS_API_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      - key: UPSTASH_REDIS_TOKEN
+        sync: false
+
+  - type: worker
+    name: macroecon-hub-scheduler
+    runtime: python
+    buildCommand: pip install -r scheduler/requirements.txt
+    startCommand: python scheduler/main.py
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRED_API_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false
+      - key: BLS_API_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      - key: UPSTASH_REDIS_TOKEN
+        sync: false

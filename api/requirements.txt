@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+sentence-transformers
+qdrant-client
+supabase
+groq
+python-dotenv
+requests
+feedparser
+apscheduler

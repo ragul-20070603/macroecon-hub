@@ -1,0 +1,7 @@
+apscheduler
+sentence-transformers
+qdrant-client
+supabase
+requests
+feedparser
+python-dotenv
