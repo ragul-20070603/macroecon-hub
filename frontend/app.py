@@ -47,9 +47,13 @@ for i, ex in enumerate(example_queries):
 st.divider()
 
 if ask_btn and query.strip():
-    with st.spinner("Searching knowledge base and generating answer..."):
+    with st.spinner("Searching knowledge base and generating answer... (first request may take 30-60 seconds)"):
         try:
-            response = requests.post(f"{API_URL}/query", json={"query": query}, timeout=30)
+            response = requests.post(
+                f"{API_URL}/query",
+                json={"query": query},
+                timeout=120
+            )
             result = response.json()
 
             if result.get("from_cache"):
@@ -57,7 +61,11 @@ if ask_btn and query.strip():
 
             st.markdown(f"**Query type detected:** `{result.get('query_type', 'conceptual')}`")
             st.markdown("### Answer")
-            st.markdown(result["answer"])
+
+            if "answer" in result:
+                st.markdown(result["answer"])
+            else:
+                st.error(f"Unexpected response: {result}")
 
             if result.get("trend_data"):
                 td = result["trend_data"]
@@ -86,6 +94,8 @@ if ask_btn and query.strip():
                         if s:
                             st.markdown(f"- {s}")
 
+        except requests.exceptions.Timeout:
+            st.error("Request timed out. The server may be starting up — please try again in 30 seconds.")
         except requests.exceptions.ConnectionError:
             st.error("Cannot connect to backend API. Make sure the API server is running.")
         except Exception as e:
@@ -94,16 +104,16 @@ if ask_btn and query.strip():
 with st.sidebar:
     st.markdown("## 📡 System Status")
     try:
-        health = requests.get(f"{API_URL}/health", timeout=5)
+        health = requests.get(f"{API_URL}/health", timeout=15)
         if health.status_code == 200:
             st.success("API: Online")
         else:
             st.error("API: Offline")
     except Exception:
-        st.error("API: Offline")
+        st.error("API: Offline — may be starting up")
 
     try:
-        stats = requests.get(f"{API_URL}/stats", timeout=5)
+        stats = requests.get(f"{API_URL}/stats", timeout=15)
         data = stats.json()
         if "total_vectors" in data:
             st.metric("Total Chunks", data["total_vectors"])
