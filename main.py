@@ -5,9 +5,6 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-from api.pipeline import run_pipeline
-from scheduler.storage.supabase_store import get_timeseries
-from scheduler.storage.qdrant_store import ensure_collection, get_client as get_qdrant
 from config import QDRANT_COLLECTION
 
 app = FastAPI(title="MacroEcon Hub API", version="1.0.0")
@@ -41,18 +38,8 @@ def query_endpoint(request: QueryRequest):
     if not request.query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty")
     try:
-        result = run_pipeline(request.query)
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/query")
-def query_endpoint(request: QueryRequest):
-    if not request.query.strip():
-        raise HTTPException(status_code=400, detail="Query cannot be empty")
-    try:
-        result = run_pipeline(request.query)
-        return result
+        from api.pipeline import run_pipeline
+        return run_pipeline(request.query)
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -61,6 +48,7 @@ def query_endpoint(request: QueryRequest):
 @app.get("/stats")
 def stats():
     try:
+        from scheduler.storage.qdrant_store import get_client as get_qdrant
         client = get_qdrant()
         info = client.get_collection(QDRANT_COLLECTION)
         return {
