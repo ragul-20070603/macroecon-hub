@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 pydantic
-sentence-transformers
+fastembed
 qdrant-client
 supabase
 groq
