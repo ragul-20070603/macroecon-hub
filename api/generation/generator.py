@@ -31,12 +31,10 @@ If discussing trends, reference the actual data points. Always indicate data sou
 
     response = client.chat.completions.create(
         model=GROQ_MODEL,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.2,
-        max_tokens=8000
+        messages=[...],
+        temperature=0.3,
+        max_tokens=8000,
+        reasoning_effort="low",
     )
     return response.choices[0].message.content
 
@@ -57,8 +55,9 @@ causes, and implications. Be specific about historical events that caused major 
 
     response = client.chat.completions.create(
         model=GROQ_MODEL,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[...],
         temperature=0.3,
-        max_tokens=6000
+        max_tokens=8000,
+        reasoning_effort="low",
     )
     return response.choices[0].message.content
