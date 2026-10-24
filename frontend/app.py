@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = os.getenv("API_URL", "https://macroecon-hub-api.onrender.com")
 
 st.set_page_config(
     page_title="MacroEcon Hub",
